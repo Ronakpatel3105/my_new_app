@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "833739885993",
+    "project_id": "micro-harmony-405004",
+    "storage_bucket": "micro-harmony-405004.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833739885993:android:2dcb67d6a82dedff9108b8",
+        "android_client_info": {
+          "package_name": "com.example.my_new_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIJ3eDYVZtIR37LKXjbeGikEcOuZvHtWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
