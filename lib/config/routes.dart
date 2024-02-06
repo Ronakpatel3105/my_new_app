@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 import '../app_bloc/app_bloc.dart';
+import '../home/home_screen.dart';
+import '../login/view/login_screen.dart';
 
 List<Page<dynamic>> onGenerateAppViewPages(
     AppStatus state,
@@ -8,8 +10,8 @@ List<Page<dynamic>> onGenerateAppViewPages(
     ) {
   switch (state) {
     case AppStatus.authenticated:
-      return [HomePage.page()];
+      return [HomeScreen.page()];
     case AppStatus.unauthenticated:
-      return [LoginPage.page()];
+      return [LoginScreen.page()];
   }
 }
