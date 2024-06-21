@@ -52,8 +52,8 @@ class SignupScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Signup')),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: BlocProvider<SignupCubit>(
-          create: (_) => SignupCubit(context.read<AuthRepository>()),
+        child: BlocProvider<SignupBloc>(
+          create: (_) => SignupBloc(authRepository: AuthRepository()),
           child: const SignupForm(),
         ),
       ),

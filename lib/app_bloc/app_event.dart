@@ -1,5 +1,7 @@
-part of 'app_bloc.dart';
+/*part of 'app_bloc.dart';
 
+
+import 'package:equatable/equatable.dart';
 
 abstract class AppEvent extends Equatable {
   const AppEvent();
@@ -17,4 +19,4 @@ class AppUserChanged extends AppEvent {
 
   @override
   List<Object> get props => [user];
-}
+}*/

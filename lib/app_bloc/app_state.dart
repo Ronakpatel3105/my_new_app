@@ -53,7 +53,7 @@ class AppState extends Equatable {
   List<Object?> get props => [status, user];
 }*/
 
-enum AppStatus { authenticated, unauthenticated }
+/*enum AppStatus { authenticated, unauthenticated }
 
 class AppState extends Equatable {
   final AppStatus status;
@@ -75,3 +75,4 @@ class AppState extends Equatable {
   @override
   List<Object> get props => [status, user];
 }
+*/

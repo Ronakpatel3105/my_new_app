@@ -1,42 +1,40 @@
-/*
+
+
+
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:my_custom_widget/Home/onboarding/login/repositories/login_repository.dart';
 
-import '../../repositories/auth_repository.dart';
-import '../Exception/login_exception.dart';
-
-part 'login_event.dart';
-
-part 'login_state.dart';
+import '../../repository/auth_repository.dart';
+import 'login_event.dart';
+import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final LoginRepository loginRepository;
-
-  LoginBloc({required this.loginRepository})
-      : super(LoginState(status: LoginStatus.initial)) {
-    on<LoginEmailChanged>(_onLoginEmailChanged);
-    on<LoginPasswordChanged>(_onLoginPasswordChanged);
-    on<LoginForgotPasswordChanged>(_onLoginForgotPasswordChanged);
-    on<SignInSubmitted>(_onSignIn);
+  LoginBloc({
+    required AuthRepository authRepository,
+  })  : _authRepository = authRepository,
+        super(const LoginState()) {
+    on<LoginButtonPressedEvent>(_onSignIn);
+    on<LoginEmailChangedEvent>(_onLoginEmailChanged);
+    on<LoginPasswordChangedEvent>(_onLoginPasswordChanged);
   }
 
-  void _onLoginEmailChanged(LoginEmailChanged event, Emitter<LoginState> emit) {
+  final AuthRepository _authRepository;
+
+  void _onLoginEmailChanged(LoginEmailChangedEvent event, Emitter<LoginState> emit) {
     emit(state.copyWith(email: event.email));
   }
 
   void _onLoginPasswordChanged(
-      LoginPasswordChanged event, Emitter<LoginState> emit) {
+      LoginPasswordChangedEvent event, Emitter<LoginState> emit) {
     emit(state.copyWith(password: event.password));
   }
 
-  void _onLoginForgotPasswordChanged(
+  /*void _onLoginForgotPasswordChanged(
       LoginForgotPasswordChanged event, Emitter<LoginState> emit) {
     emit(state.copyWith(status: LoginStatus.forgotPassword));
-  }
+  }*/
 
   void _onSignIn(
-    SignInSubmitted event,
+      LoginButtonPressedEvent event,
     Emitter<LoginState> emit,
   ) async {
     emit(state.copyWith(status: LoginStatus.loading));
@@ -44,18 +42,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var email = state.email.toString();
       var password = state.password.toString();
 
-      final user = loginRepository.signIn(email, password);
+      final user = _authRepository.loginWithEmailAndPassword(email: email, password: password);
       if (user != null) {
         emit(state.copyWith(
-            status: LoginStatus.loaded, email: email, password: password));
+            status: LoginStatus.success, email: email, password: password));
         print('signin');
       }
-    } on LogInWithEmailAndPasswordFailure {
-      emit(state.copyWith(status: LoginStatus.error));
+    } catch(e) {
+      emit(state.copyWith(status: LoginStatus.failure));
     }
   }
 }
-*/
+
 /*import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:my_new_app/repository/auth_repository.dart';
@@ -105,13 +103,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 }*/
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../repository/auth_repository.dart';
-import 'login_state.dart';
 
 
-class LoginCubit extends Cubit<LoginState> {
+
+/*class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _authRepository;
 
   LoginCubit(this._authRepository) : super(LoginState.initial());
@@ -145,4 +140,5 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(status: LoginStatus.success));
     } catch (_) {}
   }
-}
+}*/
+

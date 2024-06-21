@@ -125,6 +125,8 @@ class _SignupButton extends StatelessWidget {
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_new_app/home/home_screen.dart';
+import 'package:my_new_app/login/bloc/login_event.dart';
 
 import '../../signup/view/signup_screen.dart';
 import '../bloc/login_bloc.dart';
@@ -135,9 +137,9 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
+    return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.status == LoginStatus.error) {}
+        if (state.status == LoginStatus.failure) {}
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -158,12 +160,12 @@ class LoginForm extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
           onChanged: (email) {
-            context.read<LoginCubit>().emailChanged(email);
+            context.read<LoginBloc>().add(LoginEmailChangedEvent(email: email));
           },
           decoration: const InputDecoration(labelText: 'email'),
         );
@@ -175,12 +177,12 @@ class _EmailInput extends StatelessWidget {
 class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextField(
           onChanged: (password) {
-            context.read<LoginCubit>().passwordChanged(password);
+            context.read<LoginBloc>().add(LoginPasswordChangedEvent(password: password));
           },
           decoration: const InputDecoration(labelText: 'password'),
           obscureText: true,
@@ -193,17 +195,18 @@ class _PasswordInput extends StatelessWidget {
 class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status == LoginStatus.submitting
+        return state.status == LoginStatus.loading
             ? const CircularProgressIndicator()
             : ElevatedButton(
           style: ElevatedButton.styleFrom(
             fixedSize: const Size(200, 40),
           ),
           onPressed: () {
-            context.read<LoginCubit>().logInWithCredentials();
+            context.read<LoginBloc>().add(const LoginButtonPressedEvent());
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen(),));
           },
           child: const Text('LOGIN'),
         );

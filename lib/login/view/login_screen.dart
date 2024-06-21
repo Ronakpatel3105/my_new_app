@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: BlocProvider(
-          create: (_) => LoginCubit(context.read<AuthRepository>()),
+          create: (_) => LoginBloc(authRepository: AuthRepository()),
           child: const LoginForm(),
         ),
       ),

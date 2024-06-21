@@ -108,9 +108,10 @@ class _SignupButton extends StatelessWidget {
 }
 */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_new_app/login/view/login_screen.dart';
+import 'package:my_new_app/signup/bloc/signup_event.dart';
 
 import '../bloc/signup_bloc.dart';
 import '../bloc/signup_state.dart';
@@ -120,11 +121,11 @@ class SignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignupCubit, SignupState>(
+    return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state.status == SignupStatus.success) {
           Navigator.of(context).pop();
-        } else if (state.status == SignupStatus.error) {
+        } else if (state.status == SignupStatus.failure) {
           // Nothing for now.
         }
       },
@@ -145,12 +146,12 @@ class SignupForm extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
+    return BlocBuilder<SignupBloc, SignupState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
           onChanged: (email) {
-            context.read<SignupCubit>().emailChanged(email);
+            context.read<SignupBloc>().add(SignupEmailChangedEvent(email: email));
           },
           decoration: const InputDecoration(labelText: 'email'),
         );
@@ -162,12 +163,12 @@ class _EmailInput extends StatelessWidget {
 class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
+    return BlocBuilder<SignupBloc, SignupState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextField(
           onChanged: (password) {
-            context.read<SignupCubit>().passwordChanged(password);
+            context.read<SignupBloc>().add(SignupPasswordChangedEvent(password: password));
           },
           decoration: const InputDecoration(labelText: 'password'),
           obscureText: true,
@@ -180,10 +181,10 @@ class _PasswordInput extends StatelessWidget {
 class _SignupButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
+    return BlocBuilder<SignupBloc, SignupState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status == SignupStatus.submitting
+        return state.status == SignupStatus.loading
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -191,7 +192,8 @@ class _SignupButton extends StatelessWidget {
                   fixedSize: const Size(200, 40),
                 ),
                 onPressed: () {
-                  context.read<SignupCubit>().signupFormSubmitted();
+                  context.read<SignupBloc>().add(const SignupButtonPressedEvent());
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
                 },
                 child: const Text(
                   'SIGN UP',
